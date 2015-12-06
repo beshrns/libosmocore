@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include <osmocom/core/endian.h>
 #include <osmocom/gsm/protocol/gsm_04_12.h>
 
 /* GSM TS 03.41 definitions also TS 23.041*/
@@ -13,19 +14,36 @@
 /* Chapter 9.3.2 */
 struct gsm341_ms_message {
 	struct {
+#ifdef OSMO_IS_LITTLE_ENDIAN
 		uint8_t code_hi:6;
 		uint8_t gs:2;
 		uint8_t update:4;
 		uint8_t code_lo:4;
+#else
+		uint8_t code_lo:4;
+		uint8_t update:4;
+		uint8_t gs:2;
+		uint8_t code_hi:6;
+#endif
 	} serial;
 	uint16_t msg_id;
 	struct {
+#ifdef OSMO_IS_LITTLE_ENDIAN
 		uint8_t language:4;
 		uint8_t group:4;
+#else
+		uint8_t group:4;
+		uint8_t language:4;
+#endif
 	} dcs;
 	struct {
+#ifdef OSMO_IS_LITTLE_ENDIAN
 		uint8_t total:4;
 		uint8_t current:4;
+#else
+		uint8_t current:4;
+		uint8_t total:4;
+#endif
 	} page;
 	uint8_t data[0];
 } __attribute__((packed));
@@ -33,12 +51,21 @@ struct gsm341_ms_message {
 /* Chapter 9.4.1.3 */
 struct gsm341_etws_message {
 	struct {
+#ifdef OSMO_IS_LITTLE_ENDIAN
 		uint8_t code_hi:4;
 		uint8_t popup:1;
 		uint8_t alert:1;
 		uint8_t gs:2;
 		uint8_t update:4;
 		uint8_t code_lo:4;
+#else
+		uint8_t code_lo:4;
+		uint8_t update:4;
+		uint8_t gs:2;
+		uint8_t alert:1;
+		uint8_t popup:1;
+		uint8_t code_hi:4;
+#endif
 	} serial;
 	uint16_t msg_id;
 	uint16_t warning_type;
