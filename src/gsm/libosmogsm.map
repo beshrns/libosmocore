@@ -203,8 +203,6 @@ ms_pwr_ctl_lvl;
 ms_pwr_dbm;
 
 osmo_a5;
-osmo_a5_1;
-osmo_a5_2;
 
 osmo_auth_alg_name;
 osmo_auth_alg_parse;
