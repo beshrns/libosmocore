@@ -1,2 +1,3 @@
-#library	what		description / commit summary line
+#library	what			description / commit summary line
+libosmogsm	internal API update	Internal API for GPRS cipher implementors updated to accommodate for arbitrary key lengths
 libosmocore	change major	external talloc dependency / internal talloc removal
