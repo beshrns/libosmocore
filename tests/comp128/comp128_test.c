@@ -6,7 +6,6 @@
 
 #include <osmocom/core/bits.h>
 #include <osmocom/core/utils.h>
-#include <osmocom/gsm/comp128v23.h>
 #include <osmocom/crypt/auth.h>
 
 static struct osmo_sub_auth_data test_aux2 = {

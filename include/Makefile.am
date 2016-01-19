@@ -54,8 +54,6 @@ nobase_include_HEADERS = \
                        osmocom/gsm/a5.h \
                        osmocom/gsm/abis_nm.h \
                        osmocom/gsm/apn.h \
-                       osmocom/gsm/comp128.h \
-                       osmocom/gsm/comp128v23.h \
                        osmocom/gsm/gan.h \
                        osmocom/gsm/gsm0341.h \
                        osmocom/gsm/gsm0411_smc.h \
@@ -121,7 +119,9 @@ endif
 
 noinst_HEADERS = \
 	osmocom/core/timer_compat.h \
-	osmocom/gsm/kasumi.h
+	osmocom/gsm/kasumi.h \
+	osmocom/gsm/comp128.h \
+	osmocom/gsm/comp128v23.h
 
 osmocom/core/bit%gen.h: osmocom/core/bitXXgen.h.tpl
 	$(AM_V_GEN)$(MKDIR_P) $(dir $@)

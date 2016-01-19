@@ -26,7 +26,6 @@ abis_nm_ipa_magic;
 
 osmo_sitype_strs;
 
-comp128;
 dbm2rxlev;
 
 gprs_cipher_gen_input_i;

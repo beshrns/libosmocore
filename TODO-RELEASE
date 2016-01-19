@@ -1,4 +1,5 @@
 #library	what			description / commit summary line
+libosmogsm	api-change	remove comp128 from public API
 libosmogsm	api-change	remove osmo_a5_1 and osmo_a5_2 - generic osmo_a5 should suffice for all use cases
 libosmogsm	internal API update	Internal API for GPRS cipher implementors updated to accommodate for arbitrary key lengths
 libosmocore	change major	external talloc dependency / internal talloc removal
