@@ -1,6 +1,6 @@
 AT_INIT
 AT_BANNER([Regression tests.])
-
+AT_COLOR_TESTS
 
 # todo.. create one macro for it
 AT_SETUP([a5])
@@ -44,7 +44,7 @@ AT_SETUP([msgfile])
 AT_KEYWORDS([msgfile])
 cp $abs_srcdir/msgfile/msgconfig.cfg .
 cat $abs_srcdir/msgfile/msgfile_test.ok > expout
-AT_CHECK([$abs_top_builddir/tests/msgfile/msgfile_test], [0], [expout])
+AT_CHECK([ASAN_OPTIONS="detect_leaks=0" $abs_top_builddir/tests/msgfile/msgfile_test], [0], [expout])
 AT_CLEANUP
 endif
 
@@ -81,13 +81,13 @@ AT_CLEANUP
 AT_SETUP([lapd])
 AT_KEYWORDS([lapd])
 cat $abs_srcdir/lapd/lapd_test.ok > expout
-AT_CHECK([$abs_top_builddir/tests/lapd/lapd_test], [0], [expout], [ignore])
+AT_CHECK([ASAN_OPTIONS="detect_leaks=0" $abs_top_builddir/tests/lapd/lapd_test], [0], [expout], [ignore])
 AT_CLEANUP
 
 AT_SETUP([gsm0808])
 AT_KEYWORDS([gsm0808])
 cat $abs_srcdir/gsm0808/gsm0808_test.ok > expout
-AT_CHECK([$abs_top_builddir/tests/gsm0808/gsm0808_test], [0], [expout], [ignore])
+AT_CHECK([ASAN_OPTIONS="detect_leaks=0" $abs_top_builddir/tests/gsm0808/gsm0808_test], [0], [expout], [ignore])
 AT_CLEANUP
 
 AT_SETUP([gsm0408])
@@ -164,7 +164,7 @@ AT_SETUP([bssgp-fc])
 AT_KEYWORDS([bssgp-fc])
 cat $abs_srcdir/gb/bssgp_fc_tests.ok > expout
 cat $abs_srcdir/gb/bssgp_fc_tests.err > experr
-AT_CHECK([$abs_top_srcdir/tests/gb/bssgp_fc_tests.sh $abs_top_builddir/tests/gb], [0], [expout], [experr])
+AT_CHECK([ASAN_OPTIONS="detect_leaks=0" $abs_top_srcdir/tests/gb/bssgp_fc_tests.sh $abs_top_builddir/tests/gb], [0], [expout], [experr])
 AT_CLEANUP
 
 AT_SETUP([timer])
