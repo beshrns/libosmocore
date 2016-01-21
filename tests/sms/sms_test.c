@@ -44,6 +44,7 @@ struct test_case {
 	const uint16_t expected_octet_length;
 	const uint16_t expected_septet_length;
 	const uint8_t ud_hdr_ind;
+	const char * descr;
 };
 
 static const char simple_text[] = "test text";
@@ -131,6 +132,7 @@ static const struct test_case test_multiple_encode[] =
 		.expected_octet_length = sizeof(concatenated_part1_enc),
 		.expected_septet_length = concatenated_part1_septet_length,
 		.ud_hdr_ind = 1,
+		.descr = "concatenated text p1"
 	},
 	{
 		.input = (const uint8_t *) concatenated_text,
@@ -138,6 +140,7 @@ static const struct test_case test_multiple_encode[] =
 		.expected_octet_length = sizeof(concatenated_part2_enc),
 		.expected_septet_length = concatenated_part2_septet_length,
 		.ud_hdr_ind = 1,
+		.descr = "concatenated text p2"
 	},
 };
 
@@ -149,6 +152,7 @@ static const struct test_case test_encode[] =
 		.expected_octet_length = sizeof(simple_enc),
 		.expected_septet_length = simple_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "simple text"
 	},
 	{
 		.input = (const uint8_t *) escape_text,
@@ -156,6 +160,7 @@ static const struct test_case test_encode[] =
 		.expected_octet_length = sizeof(escape_enc),
 		.expected_septet_length = escape_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "escape text"
 	},
 	{
 		.input = (const uint8_t *) enhanced_text,
@@ -163,6 +168,7 @@ static const struct test_case test_encode[] =
 		.expected_octet_length = sizeof(enhanced_enc),
 		.expected_septet_length = enhanced_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "enhanced text"
 	},
 	{
 		.input = (const uint8_t *) enhancedV2_text,
@@ -170,6 +176,7 @@ static const struct test_case test_encode[] =
 		.expected_octet_length = sizeof(enhancedV2_enc),
 		.expected_septet_length = enhancedV2_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "enhanced text v2"
 	},
 };
 
@@ -181,6 +188,7 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) simple_text,
 		.expected_septet_length = simple_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "simple text"
 	},
 	{
 		.input = escape_enc,
@@ -188,6 +196,7 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) escape_text,
 		.expected_septet_length = escape_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "escape text"
 	},
 	{
 		.input = enhanced_enc,
@@ -195,6 +204,7 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) enhanced_text,
 		.expected_septet_length = enhanced_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "enhanced text"
 	},
 	{
 		.input = enhancedV2_enc,
@@ -202,6 +212,7 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) enhancedV2_text,
 		.expected_septet_length = enhancedV2_septet_length,
 		.ud_hdr_ind = 0,
+		.descr = "enhanced text v2"
 	},
 	{
 		.input = concatenated_part1_enc,
@@ -209,6 +220,7 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) splitted_text_part1,
 		.expected_septet_length = concatenated_part1_septet_length_with_header,
 		.ud_hdr_ind = 1,
+		.descr = "concatenated text p1"
 	},
 	{
 		.input = concatenated_part2_enc,
@@ -216,7 +228,8 @@ static const struct test_case test_decode[] =
 		.expected = (const uint8_t *) splitted_text_part2,
 		.expected_septet_length = concatenated_part2_septet_length_with_header,
 		.ud_hdr_ind = 1,
-	},
+		.descr = "concatenated text p2"
+		},
 };
 
 static void test_octet_return()
@@ -288,29 +301,17 @@ int main(int argc, char** argv)
 
 	/* test 7-bit encoding */
 	for (i = 0; i < ARRAY_SIZE(test_encode); ++i) {
-		/* Test legacy function (return value only) */
-		septet_length = gsm_7bit_encode(coded,
-						(const char *) test_encode[i].input);
-		printf("Legacy encode case %d: "
-		       "septet length %d (expected %d)\n"
-		       , i
-		       , septet_length, test_encode[i].expected_septet_length
-		      );
-		OSMO_ASSERT (septet_length == test_encode[i].expected_septet_length);
-
-		/* Test new function */
 		memset(coded, 0x42, sizeof(coded));
 		septet_length = gsm_7bit_encode_n(coded, sizeof(coded),
 			       			  (const char *) test_encode[i].input,
 						  &octets_written);
 		computed_octet_length = gsm_get_octet_len(septet_length);
-		printf("Encode case %d: "
-		       "Octet length %d (expected %d, computed %d), "
-		       "septet length %d (expected %d)\n"
-		       , i
-		       , octets_written, test_encode[i].expected_octet_length, computed_octet_length
-		       , septet_length, test_encode[i].expected_septet_length
-		      );
+		printf("Encode case %d (%s): "
+		       "Octet length %d (expected %d, computed %d, test %s), "
+		       "septet length %d (expected %d, test %s)\n",
+		       i, test_encode[i].descr,
+		       octets_written, test_encode[i].expected_octet_length, computed_octet_length, (test_encode[i].expected_octet_length == computed_octet_length) ? "OK" : "FAIL",
+		       septet_length, test_encode[i].expected_septet_length, (septet_length == test_encode[i].expected_septet_length) ? "OK" : "FAIL");
 
 		OSMO_ASSERT (octets_written == test_encode[i].expected_octet_length);
 		OSMO_ASSERT (octets_written == computed_octet_length);
@@ -377,22 +378,18 @@ int main(int argc, char** argv)
 
 	/* test 7-bit decoding */
 	for (i = 0; i < ARRAY_SIZE(test_decode); ++i) {
-		/* Test legacy function (return value only) */
-		if (!test_decode[i].ud_hdr_ind) {
-			nchars = gsm_7bit_decode(result, test_decode[i].input,
-						 test_decode[i].expected_septet_length);
-			printf("Legacy decode case %d: "
-			       "return value %d (expected %d)\n",
-			       i, nchars, test_decode[i].expected_septet_length);
-		}
-
-		/* Test new function */
 		memset(result, 0x42, sizeof(result));
+//		printf("Attempting to 7 bit decode %d to %d with exp %d and ind %d\n", test_decode[i].input_length, sizeof(result), test_decode[i].expected_septet_length, test_decode[i].ud_hdr_ind);
 		nchars = gsm_7bit_decode_n_hdr(result, sizeof(result), test_decode[i].input,
 				test_decode[i].expected_septet_length, test_decode[i].ud_hdr_ind);
-		printf("Decode case %d: return value %d (expected %d)\n", i, nchars, strlen(result));
+		printf("Decode case %d (%s): return value %d, expected %d, test %s\n", i, test_decode[i].descr, nchars, strlen(result), (strlen(result) == nchars) ? "OK" : "FAIL");
 
-		OSMO_ASSERT(strcmp(result, (const char *) test_decode[i].expected) == 0);
+		int res = strcmp(result, (const char *) test_decode[i].expected);
+		if(0 != res) {
+		  printf("%d:\n%s\n%s\n", res, osmo_hexdump(result, strlen(result)),
+			 osmo_hexdump(test_decode[i].expected, strlen(result)));
+		}
+
 		OSMO_ASSERT(nchars == strlen(result));
 
 		/* check buffer limiting */
