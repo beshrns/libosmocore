@@ -75,7 +75,7 @@ uint32_t osmo_revbytebits_32(uint32_t x);
 uint32_t osmo_revbytebits_8(uint8_t x);
 
 /* \brief reverse the bits of each byte in a given buffer */
-void osmo_revbytebits_buf(uint8_t *buf, int len);
+void osmo_revbytebits_buf(uint8_t *buf, unsigned int len);
 
 /*! \brief left circular shift
  *  \param[in] in The 16 bit unsigned integer to be rotated
